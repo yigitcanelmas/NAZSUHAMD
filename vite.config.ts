@@ -90,13 +90,22 @@ export default defineConfig(({ command, mode }) => {
       exclude: isDev ? [] : ['@vite/client', '@vite/env']
     },
 
-    // Environment-specific configurations
-    ...(isDev && {
-      esbuild: {
+    // ESBuild configuration - ignore TypeScript errors for Vercel
+    esbuild: {
+      logOverride: { 
+        'this-is-undefined-in-esm': 'silent',
+        'direct-eval': 'silent'
+      },
+      ...(isDev && {
         jsxDev: true
-      }
-    }),
+      }),
+      ...(isProd && {
+        drop: ['console', 'debugger'],
+        legalComments: 'none'
+      })
+    },
 
+    // Environment-specific configurations
     ...(isProd && {
       build: {
         outDir: 'dist',

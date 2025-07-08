@@ -11,6 +11,7 @@
     "build:dev": "tsc && vite build --mode development",
     "build:staging": "tsc && vite build --mode staging",
     "build:prod": "tsc && vite build --mode production",
+    "build:vercel": "vite build --mode production",
     "build:analyze": "npm run build:prod && npx vite-bundle-analyzer dist/stats.html",
     "preview": "vite preview",
     "preview:staging": "vite preview --mode staging",

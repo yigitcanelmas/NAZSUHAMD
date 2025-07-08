@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+HAU import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
@@ -35,7 +35,7 @@ const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
-  const [notifications, setNotifications] = useState(3)
+  const [notifications] = useState(3)
   
   const location = useLocation()
   const navigate = useNavigate()
