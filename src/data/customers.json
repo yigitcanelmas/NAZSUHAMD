@@ -1,0 +1,52 @@
+[
+  {
+    "id": "user-1",
+    "firstName": "Ahmet",
+    "lastName": "Yılmaz",
+    "email": "ahmet@email.com",
+    "phone": "0532 123 45 67",
+    "address": {
+      "street": "Atatürk Caddesi No: 123",
+      "city": "İstanbul",
+      "district": "Kadıköy",
+      "postalCode": "34710",
+      "country": "Türkiye"
+    },
+    "dateOfBirth": "1985-05-15",
+    "gender": "male",
+    "isActive": true,
+    "registrationDate": "2023-01-15",
+    "lastLoginDate": "2024-01-20",
+    "orderHistory": ["order-1", "order-2"],
+    "preferences": {
+      "newsletter": true,
+      "smsNotifications": true,
+      "emailNotifications": true
+    }
+  },
+  {
+    "id": "user-2",
+    "firstName": "Ayşe",
+    "lastName": "Kaya",
+    "email": "ayse@email.com",
+    "phone": "0533 987 65 43",
+    "address": {
+      "street": "İnönü Bulvarı No: 456",
+      "city": "İstanbul",
+      "district": "Beşiktaş",
+      "postalCode": "34349",
+      "country": "Türkiye"
+    },
+    "dateOfBirth": "1990-08-22",
+    "gender": "female",
+    "isActive": true,
+    "registrationDate": "2023-03-10",
+    "lastLoginDate": "2024-01-19",
+    "orderHistory": ["order-3"],
+    "preferences": {
+      "newsletter": true,
+      "smsNotifications": false,
+      "emailNotifications": true
+    }
+  }
+]

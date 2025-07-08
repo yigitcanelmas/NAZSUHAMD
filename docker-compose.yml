@@ -1,0 +1,135 @@
+version: '3.8'
+
+services:
+  # Frontend - Development
+  frontend-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: nazsu-frontend-dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - VITE_APP_ENV=development
+    networks:
+      - nazsu-network
+    profiles:
+      - development
+
+  # Frontend - Staging
+  frontend-staging:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: staging
+      args:
+        BUILD_MODE: staging
+    container_name: nazsu-frontend-staging
+    ports:
+      - "3001:80"
+    environment:
+      - NODE_ENV=staging
+      - VITE_APP_ENV=staging
+    networks:
+      - nazsu-network
+    profiles:
+      - staging
+
+  # Frontend - Production
+  frontend-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+      args:
+        BUILD_MODE: production
+    container_name: nazsu-frontend-prod
+    ports:
+      - "3002:80"
+    environment:
+      - NODE_ENV=production
+      - VITE_APP_ENV=production
+    networks:
+      - nazsu-network
+    profiles:
+      - production
+
+  # Backend Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: nazsu-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - MONGODB_URI=${MONGODB_URI:-mongodb://mongodb:27017/nazsu}
+    depends_on:
+      - mongodb
+    networks:
+      - nazsu-network
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  # MongoDB Database
+  mongodb:
+    image: mongo:6.0
+    container_name: nazsu-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME:-admin}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD:-password}
+      - MONGO_INITDB_DATABASE=${MONGO_DB_NAME:-nazsu}
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - nazsu-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: nazsu-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - nazsu-network
+
+  # Nginx Load Balancer (Production)
+  nginx:
+    image: nginx:alpine
+    container_name: nazsu-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - frontend-prod
+      - backend
+    networks:
+      - nazsu-network
+    profiles:
+      - production
+
+networks:
+  nazsu-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+    driver: local
+  redis_data:
+    driver: local
